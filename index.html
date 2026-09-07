@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Régua: estatística, psicometria e learning analytics na prática</title>
+<meta name="description" content="Ambiente virtual de aprendizagem com 64 apps interativos de estatística, psicometria, epidemiologia e learning analytics para a pós-graduação, com teoria em pequenas doses, demonstrações, autotestes sem nota e pontes com a sua tese.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23175E73'/%3E%3Cpath d='M6 23h20M8 23v-7M13 23v-4M18 23v-9M23 23v-4' stroke='%23fff' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&amp;family=STIX+Two+Text:ital,wght@0,400;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+<style>
+.qvl { --paper:#F1F4F2; --card:#FFFFFF; --ink:#17262C; --sub:#54655F;
+  --line:#DCE3DE; --line2:#C6D0CA; --teal:#175E73; --ok:#2A7F62;
+  --warn:#A63D2F; --amber:#B3591B; --violet:#5B4B8A;
+  margin:0; font-family:'IBM Plex Sans',system-ui,-apple-system,sans-serif;
+  color:var(--ink); background:var(--paper); min-height:100vh; -webkit-text-size-adjust:100%; }
+.qvl * { box-sizing:border-box; }
+.qvl-wrap { max-width:980px; margin:0 auto; padding:0 20px 72px; }
+.sr { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+.skip { position:absolute; left:-999px; top:8px; background:var(--card); color:var(--ink); padding:8px 12px; border:2px solid var(--teal); border-radius:6px; z-index:20; }
+.skip:focus { left:20px; }
+.qvl a { color:var(--teal); }
+.qvl a:focus-visible, .qvl button:focus-visible, .qvl summary:focus-visible, .qvl input:focus-visible { outline:2px solid var(--teal); outline-offset:2px; }
+.js-only { display:none; }
+.js .js-only { display:block; }
+
+/* ---- cabeçalho */
+.mast { padding:38px 0 0; }
+.mast h1 { font-family:'STIX Two Text',Georgia,serif; font-weight:700; font-size:clamp(44px,7vw,68px);
+  margin:0; letter-spacing:-0.015em; line-height:1; }
+.lede { font-family:'STIX Two Text',Georgia,serif; font-style:italic; font-size:clamp(19px,2.6vw,23px);
+  line-height:1.35; margin:12px 0 0; max-width:36ch; }
+.sub { margin:12px 0 0; color:var(--sub); font-size:14.5px; max-width:66ch; line-height:1.55; }
+.ruler { display:block; width:100%; height:auto; margin-top:22px; overflow:visible; }
+.ruler .base { stroke:var(--ink); stroke-width:2; opacity:.85; vector-effect:non-scaling-stroke; }
+.ruler .tk { stroke-width:1.5; stroke-linecap:round; opacity:.5; vector-effect:non-scaling-stroke; }
+.ruler .tk.feito { stroke-width:3; opacity:1; }
+.ruler .s-est .tk { stroke:var(--teal); } .ruler .s-psi .tk { stroke:var(--violet); }
+.ruler .s-top .tk { stroke:var(--amber); } .ruler .s-la .tk { stroke:var(--ok); }
+.ruler a:hover .tk, .ruler a:focus-visible .tk { opacity:1; }
+.ruler a:focus-visible { outline:none; }
+.ruler text { font-family:'IBM Plex Sans',system-ui,sans-serif; font-size:11px; fill:var(--sub); }
+.ruler-cap { font-size:12.5px; color:var(--sub); margin:8px 0 0; line-height:1.5; }
+@media (max-width:720px) { .ruler text { display:none; } }
+
+/* ---- navegação fixa */
+.topnav { position:sticky; top:0; z-index:5; background:var(--paper); display:flex; flex-wrap:wrap; align-items:center;
+  gap:2px; border-bottom:1px solid var(--line2); margin-top:14px; }
+.topnav a { white-space:nowrap; text-decoration:none; color:var(--sub); font-size:14.5px; padding:12px 12px 9px;
+  border-bottom:3px solid transparent; margin-bottom:-1px; display:inline-flex; align-items:center; }
+.topnav a:first-child { padding-left:0; }
+.topnav a:hover { color:var(--ink); border-bottom-color:var(--line2); }
+.topnav .dot { width:8px; height:8px; border-radius:50%; background:var(--c); display:inline-block; margin-right:7px; }
+.topnav .search { margin-left:auto; padding:6px 0; }
+.topnav input { font:inherit; font-size:14px; padding:6px 10px; border:1px solid var(--line2); border-radius:6px;
+  background:var(--card); color:var(--ink); width:200px; max-width:100%; }
+.topnav input::placeholder { color:#7c8b86; }
+.busca-status { font-size:13.5px; color:var(--sub); margin:10px 0 0; }
+.busca-status button { font:inherit; font-size:13px; color:var(--teal); background:none; border:none; padding:0 0 0 8px; cursor:pointer; text-decoration:underline; }
+@media (max-width:640px) { .topnav { position:static; } .topnav a { padding:9px 10px 7px; } .topnav .search { flex-basis:100%; margin-left:0; padding:4px 0 10px; } .topnav input { width:100%; } }
+.buscando #comecar, .buscando #como { display:none; }
+
+/* ---- seções */
+.sec { margin-top:38px; }
+.sec h2 { font-family:'STIX Two Text',Georgia,serif; font-size:clamp(22px,3vw,27px); font-weight:600; margin:0; line-height:1.25; }
+.sec h3 { font-family:'STIX Two Text',Georgia,serif; font-size:18px; font-weight:600; margin:22px 0 4px; }
+.sec > p { font-size:14.5px; line-height:1.55; max-width:66ch; margin:8px 0 0; }
+.sec > p.ou { color:var(--sub); margin-top:12px; }
+
+/* ---- trilhas */
+.trilhas { display:grid; grid-template-columns:1fr 1fr; gap:10px 14px; margin-top:14px; align-items:start; }
+@media (max-width:700px) { .trilhas { grid-template-columns:1fr; } }
+.trilha { background:var(--card); border:1px solid var(--line); border-radius:8px; }
+.trilha[open] { border-color:var(--teal); }
+.trilha summary { list-style:none; cursor:pointer; padding:12px 14px; font-size:15px; font-weight:500; line-height:1.4;
+  display:flex; gap:11px; align-items:flex-start; border-radius:8px; }
+.trilha summary::-webkit-details-marker { display:none; }
+.trilha summary::before { content:""; width:8px; height:8px; border-right:2px solid var(--teal); border-bottom:2px solid var(--teal);
+  transform:rotate(-45deg); margin-top:6px; flex:none; transition:transform .15s; }
+.trilha[open] summary::before { transform:rotate(45deg); }
+.trilha ol { margin:0; padding:0 14px 6px 14px; list-style:none; counter-reset:passo; }
+.trilha li { counter-increment:passo; display:flex; gap:10px; align-items:baseline; padding:8px 0; border-top:1px solid var(--line); font-size:14.5px; line-height:1.4; }
+.trilha li::before { content:counter(passo); font-size:12px; color:var(--sub); min-width:1.3em; font-variant-numeric:tabular-nums; }
+.trilha li a { color:var(--ink); text-decoration:none; }
+.trilha li a:hover { text-decoration:underline; text-underline-offset:3px; }
+.trilha li .dica { color:var(--sub); font-size:13px; }
+.trilha li .ok { display:none; }
+.trilha li.feito-sim .ok { display:inline; color:var(--ok); font-weight:600; }
+.trilha li.feito-sim .ok::before { content:"\2713"; }
+.tag { font-size:11.5px; color:var(--c); border:1px solid currentColor; border-radius:999px; padding:1px 7px; margin-left:auto; white-space:nowrap; opacity:.85; }
+@media (max-width:480px) { .tag { display:none; } }
+
+/* ---- roteiro */
+.roteiro { list-style:none; margin:16px 0 0; padding:0; display:grid; grid-template-columns:repeat(5,1fr); gap:0 18px; border-top:2px solid var(--ink); }
+.roteiro li { padding:12px 0 0; position:relative; }
+.roteiro li::before { content:""; position:absolute; top:-2px; left:0; width:2px; height:10px; background:var(--ink); }
+.roteiro strong { display:block; font-family:'STIX Two Text',Georgia,serif; font-weight:600; font-size:16.5px; line-height:1.3; }
+.roteiro span { display:block; font-size:13px; line-height:1.5; color:var(--sub); margin-top:5px; }
+@media (max-width:820px) { .roteiro { grid-template-columns:1fr; gap:0; border-top:none; }
+  .roteiro li { padding:10px 0 10px 14px; border-top:1px solid var(--line); }
+  .roteiro li::before { top:12px; left:0; height:16px; } }
+
+/* ---- séries */
+.series { margin-top:38px; }
+.serie { background:var(--card); border:1px solid var(--line); border-radius:8px; margin-top:12px; }
+.serie[open] { border-color:var(--c); }
+.serie summary { list-style:none; cursor:pointer; display:grid; grid-template-columns:auto 1fr auto; gap:4px 16px; padding:16px 18px; align-items:start; border-radius:8px; }
+.serie summary::-webkit-details-marker { display:none; }
+.serie summary:hover { background:#F7FAF8; }
+.serie[open] summary { border-radius:8px 8px 0 0; }
+.serie-num { font-family:'STIX Two Text',Georgia,serif; font-size:30px; font-weight:600; color:var(--c); line-height:1; grid-row:1 / span 3; padding-top:2px; font-variant-numeric:tabular-nums; }
+.serie-titulo { font-family:'STIX Two Text',Georgia,serif; font-size:22px; font-weight:600; line-height:1.2; }
+.serie-titulo small { font-family:'IBM Plex Sans',system-ui,sans-serif; font-size:13px; font-weight:400; color:var(--sub); margin-left:6px; white-space:nowrap; }
+.serie-abrir { grid-column:3; grid-row:1; font-size:13.5px; color:var(--c); white-space:nowrap; padding-top:5px; }
+.serie-abrir .fe, .serie[open] .serie-abrir .ab { display:none; }
+.serie[open] .serie-abrir .fe { display:inline; }
+.serie-fim { grid-column:2 / span 2; font-size:14.5px; color:var(--sub); line-height:1.5; max-width:66ch; }
+.serie-prog { grid-column:2 / span 2; font-size:13px; color:var(--c); font-weight:500; }
+@media (max-width:560px) { .serie summary { grid-template-columns:auto 1fr; } .serie-abrir { grid-column:2; grid-row:auto; padding-top:0; } .serie-fim, .serie-prog { grid-column:2; } }
+
+.apps { list-style:none; margin:0; padding:2px 18px 16px; display:grid; grid-template-columns:1fr 1fr; gap:0 26px; border-top:1px solid var(--line); }
+@media (max-width:720px) { .apps { grid-template-columns:1fr; } }
+.app { display:grid; grid-template-columns:auto 1fr; gap:3px 12px; padding:13px 0 11px; border-bottom:1px solid var(--line); align-items:start; }
+.app.oculto { display:none; }
+.tick { font-variant-numeric:tabular-nums; font-size:12.5px; font-weight:600; color:var(--c); border-left:2px solid var(--c); padding:2px 0 2px 7px; line-height:1.3; margin-top:2px; grid-row:1 / span 3; min-width:2.6em; }
+.app.feito-sim .tick { background:var(--c); color:#fff; border-radius:0 3px 3px 0; padding-right:5px; }
+.app h3 { font-size:15px; font-weight:600; margin:0; line-height:1.35; }
+.app h3 a { color:var(--ink); text-decoration:none; }
+.app h3 a:hover { color:var(--c); text-decoration:underline; text-underline-offset:3px; }
+.app h3 a::after { content:"\2197"; font-size:.78em; margin-left:.35em; color:var(--sub); }
+.app p { grid-column:2; margin:0; font-size:13.5px; color:var(--sub); line-height:1.5; }
+.feito { grid-column:2; margin-top:5px; font-size:12.5px; color:var(--sub); align-items:center; gap:6px; cursor:pointer; width:max-content; }
+.js .feito { display:inline-flex; }
+.feito input { accent-color:var(--c); width:15px; height:15px; margin:0; cursor:pointer; }
+.app.feito-sim .feito { color:var(--c); }
+
+/* ---- sobre */
+.pilares { margin:10px 0 0; padding-left:1.2em; font-size:14.5px; line-height:1.55; max-width:70ch; }
+.pilares li { margin-top:6px; }
+.refs { font-size:13px; line-height:1.5; padding-left:1.4em; margin:6px 0 0; color:var(--sub); max-width:80ch; }
+.refs li { margin-top:5px; }
+.refs a { word-break:break-all; }
+.credito { background:var(--card); border:1px solid var(--line); border-left:3px solid var(--amber); border-radius:8px; padding:13px 16px; font-size:14px; line-height:1.55; margin:8px 0 0 !important; max-width:none !important; }
+mark.editar { background:#FFF1C2; color:inherit; padding:0 3px; border-radius:3px; }
+.passaporte { font-size:13.5px; color:var(--sub); margin-top:14px !important; }
+.passaporte button { font:inherit; font-size:13px; color:var(--warn); background:none; border:1px solid var(--warn); border-radius:6px; padding:4px 10px; cursor:pointer; margin-left:6px; }
+.passaporte button:hover { background:#FBEFEC; }
+.rodape { margin-top:48px; padding-top:14px; border-top:1px solid var(--line2); font-size:13px; color:var(--sub); display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+
+@media (prefers-reduced-motion: reduce) { .trilha summary::before { transition:none; } }
+@media print {
+  .topnav, .feito, .passaporte, .skip, .busca-status { display:none !important; }
+  .serie, .trilha { border:none; }
+  .app h3 a::after { content:" " attr(href); font-size:10.5px; color:var(--sub); margin-left:.4em; word-break:break-all; }
+  .trilhas { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body class="qvl">
+<a class="skip" href="#comecar">Pular para o conteúdo</a>
+<div class="qvl-wrap">
+
+<header class="mast">
+<h1>Régua</h1>
+<p class="lede">Da pergunta da sua tese à evidência que você consegue defender.</p>
+<p class="sub">64 apps educacionais interativos de Estatística, Psicometria, Epidemiologia, Medicina Baseada em Evidências, Análise de Sobrevivência, Meta-Análises e Learning Analytics. Cada app segue o mesmo roteiro: teoria em pequenas doses, demonstrações interativas, autotestes sem nota e pontes com a sua tese. Códigos para realizar suas análises e templates para escrever seus resultados em quase todas as abas finais.</p>
+<svg class="ruler" viewBox="0 0 980 60" role="img" aria-labelledby="ruler-t" focusable="false">
+<title id="ruler-t">Régua com 64 marcas, uma por app, agrupadas nas quatro séries</title>
+<line class="base" x1="0" y1="52" x2="980" y2="52"/>
+<a href="#estatistica" class="s-est"><title>Estatística: 16 apps</title>
+<line class="tk" data-app="est-01" x1="20.0" y1="52" x2="20.0" y2="26"><title>Tipos de variáveis, níveis de mensuração e escolha do teste estatístico</title></line>
+<text x="20.0" y="14" text-anchor="start">1</text>
+<line class="tk" data-app="est-02" x1="34.92" y1="52" x2="34.92" y2="38"><title>Estatística descritiva</title></line>
+<line class="tk" data-app="est-03" x1="49.84" y1="52" x2="49.84" y2="38"><title>Estatística inferencial</title></line>
+<line class="tk" data-app="est-04" x1="64.76" y1="52" x2="64.76" y2="38"><title>Qui-quadrado</title></line>
+<line class="tk" data-app="est-05" x1="79.68" y1="52" x2="79.68" y2="38"><title>Testes t e z</title></line>
+<line class="tk" data-app="est-06" x1="94.6" y1="52" x2="94.6" y2="38"><title>Introdução ao modelo linear geral</title></line>
+<line class="tk" data-app="est-07" x1="109.52" y1="52" x2="109.52" y2="38"><title>Regressão linear simples e múltipla</title></line>
+<line class="tk" data-app="est-08" x1="124.44" y1="52" x2="124.44" y2="38"><title>ANOVA, ANCOVA, ANOVA fatorial, ANOVA de medidas repetidas e ANOVA misto</title></line>
+<line class="tk" data-app="est-09" x1="139.37" y1="52" x2="139.37" y2="38"><title>Modelos lineares generalizados</title></line>
+<line class="tk" data-app="est-10" x1="154.29" y1="52" x2="154.29" y2="38"><title>Regressão logística simples e múltipla</title></line>
+<line class="tk" data-app="est-11" x1="169.21" y1="52" x2="169.21" y2="38"><title>Regressão ordinal e multinomial</title></line>
+<line class="tk" data-app="est-12" x1="184.13" y1="52" x2="184.13" y2="38"><title>Equações de estimação generalizadas (GEEs)</title></line>
+<line class="tk" data-app="est-13" x1="199.05" y1="52" x2="199.05" y2="38"><title>MANOVA e MANOVA fatorial</title></line>
+<line class="tk" data-app="est-14" x1="213.97" y1="52" x2="213.97" y2="38"><title>Testes não-paramétricos</title></line>
+<line class="tk" data-app="est-15" x1="228.89" y1="52" x2="228.89" y2="38"><title>Estatística bayesiana</title></line>
+<line class="tk" data-app="est-16" x1="243.81" y1="52" x2="243.81" y2="38"><title>Planejamento amostral em estatística</title></line>
+</a>
+<a href="#psicometria" class="s-psi"><title>Psicometria: 24 apps</title>
+<line class="tk" data-app="psi-01" x1="258.73" y1="52" x2="258.73" y2="26"><title>Construção e adaptação de instrumentos</title></line>
+<text x="258.73" y="14" text-anchor="middle">17</text>
+<line class="tk" data-app="psi-02" x1="273.65" y1="52" x2="273.65" y2="38"><title>Evidências de validade</title></line>
+<line class="tk" data-app="psi-03" x1="288.57" y1="52" x2="288.57" y2="38"><title>Normatização e notas de corte</title></line>
+<line class="tk" data-app="psi-04" x1="303.49" y1="52" x2="303.49" y2="38"><title>Concordância entre avaliadores e instrumentos</title></line>
+<line class="tk" data-app="psi-05" x1="318.41" y1="52" x2="318.41" y2="38"><title>Teoria clássica dos testes e teoria de resposta ao item</title></line>
+<line class="tk" data-app="psi-06" x1="333.33" y1="52" x2="333.33" y2="38"><title>Teoria da generalizabilidade</title></line>
+<line class="tk" data-app="psi-07" x1="348.25" y1="52" x2="348.25" y2="38"><title>Modelo de Rasch multifacetas (MFRM)</title></line>
+<line class="tk" data-app="psi-08" x1="363.17" y1="52" x2="363.17" y2="38"><title>Análise fatorial exploratória e confirmatória</title></line>
+<line class="tk" data-app="psi-09" x1="378.1" y1="52" x2="378.1" y2="38"><title>Modelagem de equações estruturais</title></line>
+<line class="tk" data-app="psi-10" x1="393.02" y1="52" x2="393.02" y2="38"><title>Modelagem cognitiva diagnóstica (modelagem de classificação diagnóstica)</title></line>
+<line class="tk" data-app="psi-11" x1="407.94" y1="52" x2="407.94" y2="38"><title>Testagem adaptativa computadorizada</title></line>
+<line class="tk" data-app="psi-12" x1="422.86" y1="52" x2="422.86" y2="38"><title>Responsividade, resposta mínima detectável, resposta mínima importante</title></line>
+<line class="tk" data-app="psi-13" x1="437.78" y1="52" x2="437.78" y2="38"><title>Análise de classes latentes e análise de perfis latentes</title></line>
+<line class="tk" data-app="psi-14" x1="452.7" y1="52" x2="452.7" y2="38"><title>Psicometria de redes e análise exploratória de grafos</title></line>
+<line class="tk" data-app="psi-15" x1="467.62" y1="52" x2="467.62" y2="38"><title>TRI multidimensional e TRI de misturas</title></line>
+<line class="tk" data-app="psi-16" x1="482.54" y1="52" x2="482.54" y2="38"><title>TRI não-paramétrica (escala de Mokken)</title></line>
+<line class="tk" data-app="psi-17" x1="497.46" y1="52" x2="497.46" y2="38"><title>Invariância de mensuração (DIF, alinhamento, MIMIC, MGCFA)</title></line>
+<line class="tk" data-app="psi-18" x1="512.38" y1="52" x2="512.38" y2="38"><title>Modelos de segunda ordem, modelos bifatoriais, modelagem de equações estruturais exploratória e tipos de coeficiente ômega</title></line>
+<line class="tk" data-app="psi-19" x1="527.3" y1="52" x2="527.3" y2="38"><title>Modelos de escolha forçada (itens ipsativos)</title></line>
+<line class="tk" data-app="psi-20" x1="542.22" y1="52" x2="542.22" y2="38"><title>Controle de viés de aquiescência, estilos extremos e desejabilidade social</title></line>
+<line class="tk" data-app="psi-21" x1="557.14" y1="52" x2="557.14" y2="38"><title>Curvas de crescimento latente e painéis cruzados</title></line>
+<line class="tk" data-app="psi-22" x1="572.06" y1="52" x2="572.06" y2="38"><title>Equalização e linking</title></line>
+<line class="tk" data-app="psi-23" x1="586.98" y1="52" x2="586.98" y2="38"><title>Análises psicométricas multinível</title></line>
+<line class="tk" data-app="psi-24" x1="601.9" y1="52" x2="601.9" y2="38"><title>Planejamento amostral em Psicometria</title></line>
+</a>
+<a href="#topicos" class="s-top"><title>Tópicos especiais: 4 apps</title>
+<line class="tk" data-app="top-01" x1="616.83" y1="52" x2="616.83" y2="26"><title>Epidemiologia</title></line>
+<text x="616.83" y="14" text-anchor="middle">41</text>
+<line class="tk" data-app="top-02" x1="631.75" y1="52" x2="631.75" y2="38"><title>Medicina Baseada em Evidências</title></line>
+<line class="tk" data-app="top-03" x1="646.67" y1="52" x2="646.67" y2="38"><title>Meta-análises</title></line>
+<line class="tk" data-app="top-04" x1="661.59" y1="52" x2="661.59" y2="38"><title>Análise de sobrevivência</title></line>
+</a>
+<a href="#learning-analytics" class="s-la"><title>Learning analytics: 20 apps</title>
+<line class="tk" data-app="la-01" x1="676.51" y1="52" x2="676.51" y2="26"><title>Mapa de decisão para learning analytics na prática</title></line>
+<text x="676.51" y="14" text-anchor="middle">45</text>
+<line class="tk" data-app="la-02" x1="691.43" y1="52" x2="691.43" y2="38"><title>Dos logs às variáveis</title></line>
+<line class="tk" data-app="la-03" x1="706.35" y1="52" x2="706.35" y2="38"><title>Modelagem preditiva com aprendizagem de máquina</title></line>
+<line class="tk" data-app="la-04" x1="721.27" y1="52" x2="721.27" y2="38"><title>Análise de clusters</title></line>
+<line class="tk" data-app="la-05" x1="736.19" y1="52" x2="736.19" y2="38"><title>Redes epistêmicas e ordenadas</title></line>
+<line class="tk" data-app="la-06" x1="751.11" y1="52" x2="751.11" y2="38"><title>Redes temporais</title></line>
+<line class="tk" data-app="la-07" x1="766.03" y1="52" x2="766.03" y2="38"><title>Análise de sequências</title></line>
+<line class="tk" data-app="la-08" x1="780.95" y1="52" x2="780.95" y2="38"><title>Modelo VaSSTra (variáveis → estados → sequências → trajetórias)</title></line>
+<line class="tk" data-app="la-09" x1="795.87" y1="52" x2="795.87" y2="38"><title>Análise de redes de transição (TNA)</title></line>
+<line class="tk" data-app="la-10" x1="810.79" y1="52" x2="810.79" y2="38"><title>Análise de redes sociais</title></line>
+<line class="tk" data-app="la-11" x1="825.71" y1="52" x2="825.71" y2="38"><title>Mineração de processos (process mining)</title></line>
+<line class="tk" data-app="la-12" x1="840.63" y1="52" x2="840.63" y2="38"><title>Análise multicanal e estados ocultos</title></line>
+<line class="tk" data-app="la-13" x1="855.56" y1="52" x2="855.56" y2="38"><title>Processamento de linguagem, incluindo alocação latente de Dirichlet (LDA) e modelagem estrutural de tópicos (STM)</title></line>
+<line class="tk" data-app="la-14" x1="870.48" y1="52" x2="870.48" y2="38"><title>Modelos de linguagem como codificadores</title></line>
+<line class="tk" data-app="la-15" x1="885.4" y1="52" x2="885.4" y2="38"><title>Rastreamento de conhecimento (knowledge tracing)</title></line>
+<line class="tk" data-app="la-16" x1="900.32" y1="52" x2="900.32" y2="38"><title>Modelagem cognitiva diagnóstica com redes neurais</title></line>
+<line class="tk" data-app="la-17" x1="915.24" y1="52" x2="915.24" y2="38"><title>IA explicável</title></line>
+<line class="tk" data-app="la-18" x1="930.16" y1="52" x2="930.16" y2="38"><title>Painéis (Dashboards) e Feedback</title></line>
+<line class="tk" data-app="la-19" x1="945.08" y1="52" x2="945.08" y2="38"><title>Avaliação de impacto</title></line>
+<line class="tk" data-app="la-20" x1="960.0" y1="52" x2="960.0" y2="38"><title>Ética, privacidade, fairness e governança</title></line>
+</a>
+<text x="960" y="14" text-anchor="end">64</text>
+</svg>
+<p class="ruler-cap">64 marcas, uma por app. Elas ganham cor conforme você marca os apps como concluídos; o progresso fica salvo neste navegador.</p>
+</header>
+
+<nav class="topnav" aria-label="Seções da página">
+<a href="#comecar">Começar</a>
+<a href="#estatistica"><span class="dot" style="--c:var(--teal)"></span>Estatística</a>
+<a href="#psicometria"><span class="dot" style="--c:var(--violet)"></span>Psicometria</a>
+<a href="#topicos"><span class="dot" style="--c:var(--amber)"></span>Tópicos especiais</a>
+<a href="#learning-analytics"><span class="dot" style="--c:var(--ok)"></span>Learning analytics</a>
+<a href="#sobre">Sobre</a>
+<label class="search"><span class="sr">Buscar app pelo nome ou tema</span><input type="search" id="busca" placeholder="Buscar entre os 64 apps" autocomplete="off"></label>
+</nav>
+<p class="busca-status" id="busca-status" aria-live="polite" hidden></p>
+
+<section id="comecar" class="sec">
+<h2>O que a sua tese precisa?</h2>
+<p>Escolha a pergunta mais parecida com a sua. Cada trilha é uma ordem sugerida; cada app funciona sozinho.</p>
+<div class="trilhas">
+<details class="trilha" name="trilha"><summary>Ainda não sei por onde começar</summary><ol>
+<li data-app="est-01"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/7ec8cc44-e04c-44aa-aa3f-2ab226c666ff" target="_blank" rel="noopener">Tipos de variáveis, níveis de mensuração e escolha do teste estatístico<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--teal)">Estatística</span></li>
+<li data-app="est-02"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/71be6f9e-c716-415a-8d73-9c12e4585932" target="_blank" rel="noopener">Estatística descritiva<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--teal)">Estatística</span></li>
+<li data-app="est-03"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/89e7c168-bf01-488c-9244-480b9b8dd883" target="_blank" rel="noopener">Estatística inferencial<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--teal)">Estatística</span></li>
+<li data-app="est-16"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/8af599c1-af9b-498a-b635-249c02c424d1" target="_blank" rel="noopener">Planejamento amostral em estatística<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--teal)">Estatística</span></li>
+</ol></details>
+<details class="trilha" name="trilha"><summary>Vou comparar grupos ou momentos</summary><ol>
+<li data-app="est-05"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/6f6a3683-efb2-4559-9ba5-100d45bdda1b" target="_blank" rel="noopener">Testes t e z<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--teal)">Estatística</span></li>
+<li data-app="est-04"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/ce4f9512-64f9-4854-833a-4e8c88836a6f" target="_blank" rel="noopener">Qui-quadrado<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--teal)">Estatística</span></li>
+<li data-app="est-08"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/c5925596-cc63-4975-b678-09584eec5c53" target="_blank" rel="noopener">ANOVA, ANCOVA, ANOVA fatorial, ANOVA de medidas repetidas e ANOVA misto<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--teal)">Estatística</span></li>
+<li data-app="est-14"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/db9ac136-cd50-4358-a362-238151fb244a" target="_blank" rel="noopener">Testes não-paramétricos<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--teal)">Estatística</span></li>
+<li data-app="est-13"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/a5f6a2dc-49b4-4924-924b-3c1ddce80b16" target="_blank" rel="noopener">MANOVA e MANOVA fatorial<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--teal)">Estatística</span></li>
+</ol></details>
+<details class="trilha" name="trilha"><summary>Quero explicar ou prever um desfecho</summary><ol>
+<li data-app="est-06"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/221ef529-032c-46ed-9733-e2367ae44e33" target="_blank" rel="noopener">Introdução ao modelo linear geral<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--teal)">Estatística</span></li>
+<li data-app="est-07"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/d58d60ab-a2c4-418d-b9a5-738cc085c5d1" target="_blank" rel="noopener">Regressão linear simples e múltipla<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--teal)">Estatística</span></li>
+<li data-app="est-09"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/c23881e8-68b1-44b6-b522-ed2998acd262" target="_blank" rel="noopener">Modelos lineares generalizados<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--teal)">Estatística</span></li>
+<li data-app="est-10"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/3f8bccb5-1de2-442d-a1e0-f96fbb52b47e" target="_blank" rel="noopener">Regressão logística simples e múltipla<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--teal)">Estatística</span></li>
+<li data-app="est-11"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/55e2612d-c514-4f01-b813-11c7bfa964f3" target="_blank" rel="noopener">Regressão ordinal e multinomial<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--teal)">Estatística</span></li>
+<li data-app="est-12"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/be7b59de-e07d-4c88-8274-4e7a28f3bf44" target="_blank" rel="noopener">Equações de estimação generalizadas (GEEs)<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--teal)">Estatística</span></li>
+</ol></details>
+<details class="trilha" name="trilha"><summary>Vou medir mudança ao longo do tempo</summary><ol>
+<li data-app="est-05"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/6f6a3683-efb2-4559-9ba5-100d45bdda1b" target="_blank" rel="noopener">Testes t e z<span class="sr"> (abre em nova aba)</span></a> <span class="dica">medidas pareadas</span><span class="tag" style="--c:var(--teal)">Estatística</span></li>
+<li data-app="est-08"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/c5925596-cc63-4975-b678-09584eec5c53" target="_blank" rel="noopener">ANOVA, ANCOVA, ANOVA fatorial, ANOVA de medidas repetidas e ANOVA misto<span class="sr"> (abre em nova aba)</span></a> <span class="dica">medidas repetidas</span><span class="tag" style="--c:var(--teal)">Estatística</span></li>
+<li data-app="est-12"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/be7b59de-e07d-4c88-8274-4e7a28f3bf44" target="_blank" rel="noopener">Equações de estimação generalizadas (GEEs)<span class="sr"> (abre em nova aba)</span></a> <span class="dica">desfechos não normais</span><span class="tag" style="--c:var(--teal)">Estatística</span></li>
+<li data-app="psi-12"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/0fbd36b5-c106-4af0-b5be-70d079a09fae" target="_blank" rel="noopener">Responsividade, resposta mínima detectável, resposta mínima importante<span class="sr"> (abre em nova aba)</span></a> <span class="dica">a menor mudança que importa</span><span class="tag" style="--c:var(--violet)">Psicometria</span></li>
+<li data-app="psi-21"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/08e105ef-e8f5-44ac-ad20-25fe38054e99" target="_blank" rel="noopener">Curvas de crescimento latente e painéis cruzados<span class="sr"> (abre em nova aba)</span></a> <span class="dica">várias ondas de medida</span><span class="tag" style="--c:var(--violet)">Psicometria</span></li>
+</ol></details>
+<details class="trilha" name="trilha"><summary>Vou construir, adaptar ou validar um questionário</summary><ol>
+<li data-app="psi-01"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/ce4e68b0-2178-4067-8e62-6a5cff452bfa" target="_blank" rel="noopener">Construção e adaptação de instrumentos<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--violet)">Psicometria</span></li>
+<li data-app="psi-02"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/43a222b2-d047-425b-bf4c-efc7f4d56a44" target="_blank" rel="noopener">Evidências de validade<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--violet)">Psicometria</span></li>
+<li data-app="psi-05"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/0e2be77f-2556-4b82-b08f-df99ecd80e18" target="_blank" rel="noopener">Teoria clássica dos testes e teoria de resposta ao item<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--violet)">Psicometria</span></li>
+<li data-app="psi-08"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/06db9ed3-9906-44cd-bed8-95593ff93558" target="_blank" rel="noopener">Análise fatorial exploratória e confirmatória<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--violet)">Psicometria</span></li>
+<li data-app="psi-17"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/7b141a07-8b79-4ad5-b828-89bc1f3c7125" target="_blank" rel="noopener">Invariância de mensuração (DIF, alinhamento, MIMIC, MGCFA)<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--violet)">Psicometria</span></li>
+<li data-app="psi-03"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/5533d8b1-32ef-470e-9be6-166d71a4b1e2" target="_blank" rel="noopener">Normatização e notas de corte<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--violet)">Psicometria</span></li>
+<li data-app="psi-24"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/cf7f2a7b-2fca-4992-a15d-b1b0850ef79d" target="_blank" rel="noopener">Planejamento amostral em Psicometria<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--violet)">Psicometria</span></li>
+</ol></details>
+<details class="trilha" name="trilha"><summary>Vou avaliar desempenho com avaliadores (provas práticas, rubricas)</summary><ol>
+<li data-app="psi-04"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/cba4d495-c52d-48b7-8109-b66e2a25ed3f" target="_blank" rel="noopener">Concordância entre avaliadores e instrumentos<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--violet)">Psicometria</span></li>
+<li data-app="psi-06"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/4f98baaa-b49d-4aec-b28d-dac85ecd2b29" target="_blank" rel="noopener">Teoria da generalizabilidade<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--violet)">Psicometria</span></li>
+<li data-app="psi-07"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/ead763b0-60a9-4db9-b596-b6aeaf497ea6" target="_blank" rel="noopener">Modelo de Rasch multifacetas (MFRM)<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--violet)">Psicometria</span></li>
+<li data-app="psi-22"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/1c3ae1d4-55ea-428d-b432-946d1fa62783" target="_blank" rel="noopener">Equalização e linking<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--violet)">Psicometria</span></li>
+</ol></details>
+<details class="trilha" name="trilha"><summary>Tenho dados de uma plataforma de ensino (acessos, fóruns, tentativas)</summary><ol>
+<li data-app="la-01"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/5473230c-4620-4975-8be1-05a4329473f7" target="_blank" rel="noopener">Mapa de decisão para learning analytics na prática<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--ok)">Learning analytics</span></li>
+<li data-app="la-02"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/f8a72eec-1c8e-4808-b584-ccb31d26edb7" target="_blank" rel="noopener">Dos logs às variáveis<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--ok)">Learning analytics</span></li>
+<li data-app="la-03"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/3554c015-db01-4a4e-9a16-68586f4b7693" target="_blank" rel="noopener">Modelagem preditiva com aprendizagem de máquina<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--ok)">Learning analytics</span></li>
+<li data-app="la-04"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/7cb39543-45ae-4252-ae22-9527ee23bf15" target="_blank" rel="noopener">Análise de clusters<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--ok)">Learning analytics</span></li>
+<li data-app="la-07"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/035324e3-5474-4a1a-a954-1c9e8a27a1e1" target="_blank" rel="noopener">Análise de sequências<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--ok)">Learning analytics</span></li>
+<li data-app="la-20"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/78b7ae92-92b9-40bf-af0a-70a5fbf33231" target="_blank" rel="noopener">Ética, privacidade, fairness e governança<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--ok)">Learning analytics</span></li>
+</ol></details>
+<details class="trilha" name="trilha"><summary>Vou ler, sintetizar ou avaliar evidências</summary><ol>
+<li data-app="top-02"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/ca8d360d-4b8a-44f5-9931-577500d89b10" target="_blank" rel="noopener">Medicina Baseada em Evidências<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--amber)">Tópicos especiais</span></li>
+<li data-app="top-01"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/b74b8632-1186-494d-a5fa-178fdfac6655" target="_blank" rel="noopener">Epidemiologia<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--amber)">Tópicos especiais</span></li>
+<li data-app="top-03"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/d9d61096-cd86-4516-bea7-bdb7e022a0e6" target="_blank" rel="noopener">Meta-análises<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--amber)">Tópicos especiais</span></li>
+<li data-app="top-04"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/1a8fd39d-fd3a-4fbd-b41b-ce4598dce45c" target="_blank" rel="noopener">Análise de sobrevivência<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--amber)">Tópicos especiais</span></li>
+<li data-app="la-19"><span class="ok" aria-hidden="true"></span><a href="https://claude.ai/public/artifacts/0f14b7eb-5d63-47eb-963f-fc37c8046355" target="_blank" rel="noopener">Avaliação de impacto<span class="sr"> (abre em nova aba)</span></a><span class="tag" style="--c:var(--ok)">Learning analytics</span></li>
+</ol></details>
+</div>
+<p class="ou">Ou percorra as quatro séries na ordem, mais abaixo.</p>
+</section>
+
+<section id="como" class="sec">
+<h2>Como cada app funciona</h2>
+<p>O mesmo roteiro se repete em todos os apps, em abas na mesma ordem. Depois do primeiro, você já sabe onde está.</p>
+<ol class="roteiro">
+<li><strong>Teoria em pequenas doses</strong><span>Só o necessário para o próximo passo. Fórmulas ficam atrás de um botão e, quando aparecem, vêm explicadas em linguagem simples.</span></li>
+<li><strong>Demonstração interativa</strong><span>Mexa nos parâmetros e veja o que muda no gráfico ou no resultado.</span></li>
+<li><strong>Respire</strong><span>Um autoteste curto, sem nota, para fixar o que você acabou de ler. Errar aqui faz parte do método.</span></li>
+<li><strong>Na sua tese</strong><span>Por que isso importa para o seu projeto, antes de continuar.</span></li>
+<li><strong>Esteira final</strong><span>Responder, Analisar, Código, Redigir: você entra com dados, vê os resultados interpretados, copia o código em R e recebe um modelo de texto para a seção de resultados.</span></li>
+</ol></section>
+
+<section class="series" aria-label="As quatro séries">
+<details class="serie" id="estatistica" style="--c:var(--teal)">
+<summary>
+<span class="serie-num" aria-hidden="true">1</span>
+<span class="serie-titulo">Estatística <small>16 apps</small></span>
+<span class="serie-abrir"><span class="ab">Ver os 16 apps</span><span class="fe">Recolher</span></span>
+<span class="serie-fim">Ao final, você consegue escolher o teste certo para os seus dados, rodá-lo, interpretar o resultado e escrevê-lo na tese.</span>
+<span class="serie-prog" data-serie="est" data-n="16" hidden></span>
+</summary>
+<ol class="apps">
+<li class="app" id="est-01" data-busca="Tipos de variáveis, níveis de mensuração e escolha do teste estatístico | O ponto de partida: que tipo de dado você tem e qual teste combina com ele. | nominal ordinal intervalar razão fluxograma escolha do teste">
+<span class="tick" aria-hidden="true">01</span>
+<h3><a href="https://claude.ai/public/artifacts/7ec8cc44-e04c-44aa-aa3f-2ab226c666ff" target="_blank" rel="noopener">Tipos de variáveis, níveis de mensuração e escolha do teste estatístico<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>O ponto de partida: que tipo de dado você tem e qual teste combina com ele.</p>
+<label class="feito"><input type="checkbox" data-app="est-01"><span>Concluído</span></label>
+</li>
+<li class="app" id="est-02" data-busca="Estatística descritiva | Resumir e visualizar os dados antes de qualquer teste: médias, medianas, dispersão e gráficos. | média mediana desvio padrão histograma boxplot quartis">
+<span class="tick" aria-hidden="true">02</span>
+<h3><a href="https://claude.ai/public/artifacts/71be6f9e-c716-415a-8d73-9c12e4585932" target="_blank" rel="noopener">Estatística descritiva<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Resumir e visualizar os dados antes de qualquer teste: médias, medianas, dispersão e gráficos.</p>
+<label class="feito"><input type="checkbox" data-app="est-02"><span>Concluído</span></label>
+</li>
+<li class="app" id="est-03" data-busca="Estatística inferencial | Da amostra à população: incerteza, intervalo de confiança, valor-p e tamanho de efeito. | hipótese nula significância erro tipo I tipo II poder">
+<span class="tick" aria-hidden="true">03</span>
+<h3><a href="https://claude.ai/public/artifacts/89e7c168-bf01-488c-9244-480b9b8dd883" target="_blank" rel="noopener">Estatística inferencial<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Da amostra à população: incerteza, intervalo de confiança, valor-p e tamanho de efeito.</p>
+<label class="feito"><input type="checkbox" data-app="est-03"><span>Concluído</span></label>
+</li>
+<li class="app" id="est-04" data-busca="Qui-quadrado | Há associação entre duas variáveis categóricas? Tabelas de contingência, resíduos e medidas de associação. | chi-square qui quadrado tabela de contingência Fisher exato proporções">
+<span class="tick" aria-hidden="true">04</span>
+<h3><a href="https://claude.ai/public/artifacts/ce4f9512-64f9-4854-833a-4e8c88836a6f" target="_blank" rel="noopener">Qui-quadrado<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Há associação entre duas variáveis categóricas? Tabelas de contingência, resíduos e medidas de associação.</p>
+<label class="feito"><input type="checkbox" data-app="est-04"><span>Concluído</span></label>
+</li>
+<li class="app" id="est-05" data-busca="Testes t e z | Comparar médias de um ou dois grupos, incluindo medidas pareadas (antes e depois). | t de Student pareado independente Welch d de Cohen">
+<span class="tick" aria-hidden="true">05</span>
+<h3><a href="https://claude.ai/public/artifacts/6f6a3683-efb2-4559-9ba5-100d45bdda1b" target="_blank" rel="noopener">Testes t e z<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Comparar médias de um ou dois grupos, incluindo medidas pareadas (antes e depois).</p>
+<label class="feito"><input type="checkbox" data-app="est-05"><span>Concluído</span></label>
+</li>
+<li class="app" id="est-06" data-busca="Introdução ao modelo linear geral | A ideia que unifica testes t, ANOVA e regressão: um só modelo, várias perguntas. | GLM modelo linear geral variáveis dummy contrastes">
+<span class="tick" aria-hidden="true">06</span>
+<h3><a href="https://claude.ai/public/artifacts/221ef529-032c-46ed-9733-e2367ae44e33" target="_blank" rel="noopener">Introdução ao modelo linear geral<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>A ideia que unifica testes t, ANOVA e regressão: um só modelo, várias perguntas.</p>
+<label class="feito"><input type="checkbox" data-app="est-06"><span>Concluído</span></label>
+</li>
+<li class="app" id="est-07" data-busca="Regressão linear simples e múltipla | Explicar ou prever um desfecho numérico a partir de uma ou mais variáveis. | coeficiente R² resíduos multicolinearidade pressupostos">
+<span class="tick" aria-hidden="true">07</span>
+<h3><a href="https://claude.ai/public/artifacts/d58d60ab-a2c4-418d-b9a5-738cc085c5d1" target="_blank" rel="noopener">Regressão linear simples e múltipla<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Explicar ou prever um desfecho numérico a partir de uma ou mais variáveis.</p>
+<label class="feito"><input type="checkbox" data-app="est-07"><span>Concluído</span></label>
+</li>
+<li class="app" id="est-08" data-busca="ANOVA, ANCOVA, ANOVA fatorial, ANOVA de medidas repetidas e ANOVA misto | Comparar três ou mais grupos, momentos ou combinações de fatores, com ou sem covariáveis. | análise de variância post hoc Tukey esfericidade interação">
+<span class="tick" aria-hidden="true">08</span>
+<h3><a href="https://claude.ai/public/artifacts/c5925596-cc63-4975-b678-09584eec5c53" target="_blank" rel="noopener">ANOVA, ANCOVA, ANOVA fatorial, ANOVA de medidas repetidas e ANOVA misto<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Comparar três ou mais grupos, momentos ou combinações de fatores, com ou sem covariáveis.</p>
+<label class="feito"><input type="checkbox" data-app="est-08"><span>Concluído</span></label>
+</li>
+<li class="app" id="est-09" data-busca="Modelos lineares generalizados | Quando o desfecho não é normal: contagens, proporções e taxas no mesmo arcabouço. | GLM Poisson binomial negativa função de ligação deviance">
+<span class="tick" aria-hidden="true">09</span>
+<h3><a href="https://claude.ai/public/artifacts/c23881e8-68b1-44b6-b522-ed2998acd262" target="_blank" rel="noopener">Modelos lineares generalizados<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Quando o desfecho não é normal: contagens, proporções e taxas no mesmo arcabouço.</p>
+<label class="feito"><input type="checkbox" data-app="est-09"><span>Concluído</span></label>
+</li>
+<li class="app" id="est-10" data-busca="Regressão logística simples e múltipla | Desfechos do tipo sim/não: razão de chances, ajuste por confundidores e desempenho do modelo. | odds ratio curva ROC Hosmer-Lemeshow logit">
+<span class="tick" aria-hidden="true">10</span>
+<h3><a href="https://claude.ai/public/artifacts/3f8bccb5-1de2-442d-a1e0-f96fbb52b47e" target="_blank" rel="noopener">Regressão logística simples e múltipla<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Desfechos do tipo sim/não: razão de chances, ajuste por confundidores e desempenho do modelo.</p>
+<label class="feito"><input type="checkbox" data-app="est-10"><span>Concluído</span></label>
+</li>
+<li class="app" id="est-11" data-busca="Regressão ordinal e multinomial | Desfechos com categorias ordenadas (leve, moderado, grave) ou sem ordem natural. | chances proporcionais logit cumulativo categorias">
+<span class="tick" aria-hidden="true">11</span>
+<h3><a href="https://claude.ai/public/artifacts/55e2612d-c514-4f01-b813-11c7bfa964f3" target="_blank" rel="noopener">Regressão ordinal e multinomial<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Desfechos com categorias ordenadas (leve, moderado, grave) ou sem ordem natural.</p>
+<label class="feito"><input type="checkbox" data-app="est-11"><span>Concluído</span></label>
+</li>
+<li class="app" id="est-12" data-busca="Equações de estimação generalizadas (GEEs) | Medidas repetidas ou agrupadas com desfechos não normais, respeitando a correlação entre elas. | GEE longitudinal correlação de trabalho erro robusto sanduíche">
+<span class="tick" aria-hidden="true">12</span>
+<h3><a href="https://claude.ai/public/artifacts/be7b59de-e07d-4c88-8274-4e7a28f3bf44" target="_blank" rel="noopener">Equações de estimação generalizadas (GEEs)<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Medidas repetidas ou agrupadas com desfechos não normais, respeitando a correlação entre elas.</p>
+<label class="feito"><input type="checkbox" data-app="est-12"><span>Concluído</span></label>
+</li>
+<li class="app" id="est-13" data-busca="MANOVA e MANOVA fatorial | Vários desfechos numéricos ao mesmo tempo, comparados entre grupos. | multivariada Pillai Wilks lambda">
+<span class="tick" aria-hidden="true">13</span>
+<h3><a href="https://claude.ai/public/artifacts/a5f6a2dc-49b4-4924-924b-3c1ddce80b16" target="_blank" rel="noopener">MANOVA e MANOVA fatorial<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Vários desfechos numéricos ao mesmo tempo, comparados entre grupos.</p>
+<label class="feito"><input type="checkbox" data-app="est-13"><span>Concluído</span></label>
+</li>
+<li class="app" id="est-14" data-busca="Testes não-paramétricos | Alternativas quando as suposições falham ou os dados são ordinais: Mann-Whitney, Wilcoxon, Kruskal-Wallis e Friedman. | postos ordinal distribuição livre">
+<span class="tick" aria-hidden="true">14</span>
+<h3><a href="https://claude.ai/public/artifacts/db9ac136-cd50-4358-a362-238151fb244a" target="_blank" rel="noopener">Testes não-paramétricos<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Alternativas quando as suposições falham ou os dados são ordinais: Mann-Whitney, Wilcoxon, Kruskal-Wallis e Friedman.</p>
+<label class="feito"><input type="checkbox" data-app="est-14"><span>Concluído</span></label>
+</li>
+<li class="app" id="est-15" data-busca="Estatística bayesiana | Combinar conhecimento prévio com os dados: probabilidades diretas sobre hipóteses e parâmetros. | priori posteriori fator de Bayes intervalo de credibilidade">
+<span class="tick" aria-hidden="true">15</span>
+<h3><a href="https://claude.ai/public/artifacts/a78a31cd-c6b9-48b8-8cc0-c49b926cc3b1" target="_blank" rel="noopener">Estatística bayesiana<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Combinar conhecimento prévio com os dados: probabilidades diretas sobre hipóteses e parâmetros.</p>
+<label class="feito"><input type="checkbox" data-app="est-15"><span>Concluído</span></label>
+</li>
+<li class="app" id="est-16" data-busca="Planejamento amostral em estatística | Quantos participantes? Poder, tamanho de efeito e precisão, decididos antes de coletar. | tamanho da amostra cálculo amostral poder">
+<span class="tick" aria-hidden="true">16</span>
+<h3><a href="https://claude.ai/public/artifacts/8af599c1-af9b-498a-b635-249c02c424d1" target="_blank" rel="noopener">Planejamento amostral em estatística<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Quantos participantes? Poder, tamanho de efeito e precisão, decididos antes de coletar.</p>
+<label class="feito"><input type="checkbox" data-app="est-16"><span>Concluído</span></label>
+</li>
+</ol></details>
+<details class="serie" id="psicometria" style="--c:var(--violet)">
+<summary>
+<span class="serie-num" aria-hidden="true">2</span>
+<span class="serie-titulo">Psicometria <small>24 apps</small></span>
+<span class="serie-abrir"><span class="ab">Ver os 24 apps</span><span class="fe">Recolher</span></span>
+<span class="serie-fim">Ao final, você consegue construir, adaptar ou validar um instrumento e defender, com evidências, o que ele mede.</span>
+<span class="serie-prog" data-serie="psi" data-n="24" hidden></span>
+</summary>
+<ol class="apps">
+<li class="app" id="psi-01" data-busca="Construção e adaptação de instrumentos | Do construto ao item: elaborar, traduzir e adaptar culturalmente um questionário. | tradução retrotradução validação de conteúdo escala Likert comitê de especialistas">
+<span class="tick" aria-hidden="true">01</span>
+<h3><a href="https://claude.ai/public/artifacts/ce4e68b0-2178-4067-8e62-6a5cff452bfa" target="_blank" rel="noopener">Construção e adaptação de instrumentos<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Do construto ao item: elaborar, traduzir e adaptar culturalmente um questionário.</p>
+<label class="feito"><input type="checkbox" data-app="psi-01"><span>Concluído</span></label>
+</li>
+<li class="app" id="psi-02" data-busca="Evidências de validade | As cinco fontes de evidência de validade e como reunir cada uma na sua tese. | conteúdo processo de resposta estrutura interna critério consequências Standards">
+<span class="tick" aria-hidden="true">02</span>
+<h3><a href="https://claude.ai/public/artifacts/43a222b2-d047-425b-bf4c-efc7f4d56a44" target="_blank" rel="noopener">Evidências de validade<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>As cinco fontes de evidência de validade e como reunir cada uma na sua tese.</p>
+<label class="feito"><input type="checkbox" data-app="psi-02"><span>Concluído</span></label>
+</li>
+<li class="app" id="psi-03" data-busca="Normatização e notas de corte | Transformar escores brutos em normas e definir pontos de corte defensáveis. | percentil escore padronizado Angoff grupos contrastantes Hofstee ponto de corte">
+<span class="tick" aria-hidden="true">03</span>
+<h3><a href="https://claude.ai/public/artifacts/5533d8b1-32ef-470e-9be6-166d71a4b1e2" target="_blank" rel="noopener">Normatização e notas de corte<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Transformar escores brutos em normas e definir pontos de corte defensáveis.</p>
+<label class="feito"><input type="checkbox" data-app="psi-03"><span>Concluído</span></label>
+</li>
+<li class="app" id="psi-04" data-busca="Concordância entre avaliadores e instrumentos | Quanto dois avaliadores ou dois métodos concordam: kappa, correlação intraclasse e Bland-Altman. | ICC kappa confiabilidade interavaliadores Bland-Altman">
+<span class="tick" aria-hidden="true">04</span>
+<h3><a href="https://claude.ai/public/artifacts/cba4d495-c52d-48b7-8109-b66e2a25ed3f" target="_blank" rel="noopener">Concordância entre avaliadores e instrumentos<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Quanto dois avaliadores ou dois métodos concordam: kappa, correlação intraclasse e Bland-Altman.</p>
+<label class="feito"><input type="checkbox" data-app="psi-04"><span>Concluído</span></label>
+</li>
+<li class="app" id="psi-05" data-busca="Teoria clássica dos testes e teoria de resposta ao item | Dificuldade, discriminação e fidedignidade: do escore total às curvas de cada item. | TCT TRI alfa de Cronbach Rasch curva característica do item logístico">
+<span class="tick" aria-hidden="true">05</span>
+<h3><a href="https://claude.ai/public/artifacts/0e2be77f-2556-4b82-b08f-df99ecd80e18" target="_blank" rel="noopener">Teoria clássica dos testes e teoria de resposta ao item<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Dificuldade, discriminação e fidedignidade: do escore total às curvas de cada item.</p>
+<label class="feito"><input type="checkbox" data-app="psi-05"><span>Concluído</span></label>
+</li>
+<li class="app" id="psi-06" data-busca="Teoria da generalizabilidade | Separar as fontes de erro (avaliadores, estações, ocasiões) e planejar quantas de cada você precisa. | estudo G estudo D facetas coeficiente de generalizabilidade">
+<span class="tick" aria-hidden="true">06</span>
+<h3><a href="https://claude.ai/public/artifacts/4f98baaa-b49d-4aec-b28d-dac85ecd2b29" target="_blank" rel="noopener">Teoria da generalizabilidade<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Separar as fontes de erro (avaliadores, estações, ocasiões) e planejar quantas de cada você precisa.</p>
+<label class="feito"><input type="checkbox" data-app="psi-06"><span>Concluído</span></label>
+</li>
+<li class="app" id="psi-07" data-busca="Modelo de Rasch multifacetas (MFRM) | Ajustar a severidade dos avaliadores em exames práticos e outras avaliações com juízes. | OSCE severidade leniência facetas juízes">
+<span class="tick" aria-hidden="true">07</span>
+<h3><a href="https://claude.ai/public/artifacts/ead763b0-60a9-4db9-b596-b6aeaf497ea6" target="_blank" rel="noopener">Modelo de Rasch multifacetas (MFRM)<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Ajustar a severidade dos avaliadores em exames práticos e outras avaliações com juízes.</p>
+<label class="feito"><input type="checkbox" data-app="psi-07"><span>Concluído</span></label>
+</li>
+<li class="app" id="psi-08" data-busca="Análise fatorial exploratória e confirmatória | Quantas dimensões o instrumento mede? Explorar a estrutura e depois confirmá-la. | AFE AFC cargas fatoriais CFI RMSEA rotação">
+<span class="tick" aria-hidden="true">08</span>
+<h3><a href="https://claude.ai/public/artifacts/06db9ed3-9906-44cd-bed8-95593ff93558" target="_blank" rel="noopener">Análise fatorial exploratória e confirmatória<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Quantas dimensões o instrumento mede? Explorar a estrutura e depois confirmá-la.</p>
+<label class="feito"><input type="checkbox" data-app="psi-08"><span>Concluído</span></label>
+</li>
+<li class="app" id="psi-09" data-busca="Modelagem de equações estruturais | Testar relações entre variáveis latentes: mediação, caminhos e ajuste do modelo. | SEM análise de caminhos mediação moderação lavaan">
+<span class="tick" aria-hidden="true">09</span>
+<h3><a href="https://claude.ai/public/artifacts/434c1da9-19e5-46cd-a0a0-1f2c96baf911" target="_blank" rel="noopener">Modelagem de equações estruturais<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Testar relações entre variáveis latentes: mediação, caminhos e ajuste do modelo.</p>
+<label class="feito"><input type="checkbox" data-app="psi-09"><span>Concluído</span></label>
+</li>
+<li class="app" id="psi-10" data-busca="Modelagem cognitiva diagnóstica (modelagem de classificação diagnóstica) | Quais habilidades específicas cada estudante domina, item por item. | DINA G-DINA matriz Q atributos perfil de domínio">
+<span class="tick" aria-hidden="true">10</span>
+<h3><a href="https://claude.ai/public/artifacts/88ad45f4-fe44-4655-b02c-8ace3768bc00" target="_blank" rel="noopener">Modelagem cognitiva diagnóstica (modelagem de classificação diagnóstica)<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Quais habilidades específicas cada estudante domina, item por item.</p>
+<label class="feito"><input type="checkbox" data-app="psi-10"><span>Concluído</span></label>
+</li>
+<li class="app" id="psi-11" data-busca="Testagem adaptativa computadorizada | Testes que escolhem o próximo item conforme as respostas: mais precisão com menos itens. | CAT TAI banco de itens seleção de itens">
+<span class="tick" aria-hidden="true">11</span>
+<h3><a href="https://claude.ai/public/artifacts/d375596a-52e9-4d09-bd56-cd152d75d297" target="_blank" rel="noopener">Testagem adaptativa computadorizada<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Testes que escolhem o próximo item conforme as respostas: mais precisão com menos itens.</p>
+<label class="feito"><input type="checkbox" data-app="psi-11"><span>Concluído</span></label>
+</li>
+<li class="app" id="psi-12" data-busca="Responsividade, resposta mínima detectável, resposta mínima importante | O instrumento detecta mudança? A menor mudança que é real e a menor que importa para a pessoa. | MDC MCID responsividade âncora distribuição efeito teto">
+<span class="tick" aria-hidden="true">12</span>
+<h3><a href="https://claude.ai/public/artifacts/0fbd36b5-c106-4af0-b5be-70d079a09fae" target="_blank" rel="noopener">Responsividade, resposta mínima detectável, resposta mínima importante<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>O instrumento detecta mudança? A menor mudança que é real e a menor que importa para a pessoa.</p>
+<label class="feito"><input type="checkbox" data-app="psi-12"><span>Concluído</span></label>
+</li>
+<li class="app" id="psi-13" data-busca="Análise de classes latentes e análise de perfis latentes | Encontrar subgrupos ocultos de pessoas a partir dos padrões de resposta. | LCA LPA mistura entropia BIC classes">
+<span class="tick" aria-hidden="true">13</span>
+<h3><a href="https://claude.ai/public/artifacts/114376d0-2c69-439d-84ce-1e0b4e9b5a35" target="_blank" rel="noopener">Análise de classes latentes e análise de perfis latentes<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Encontrar subgrupos ocultos de pessoas a partir dos padrões de resposta.</p>
+<label class="feito"><input type="checkbox" data-app="psi-13"><span>Concluído</span></label>
+</li>
+<li class="app" id="psi-14" data-busca="Psicometria de redes e análise exploratória de grafos | Itens como uma rede: centralidade, comunidades e uma alternativa à análise fatorial. | EGA rede gaussiana centralidade bootstrap">
+<span class="tick" aria-hidden="true">14</span>
+<h3><a href="https://claude.ai/public/artifacts/24ea3540-00b8-4caf-8471-fc95b72d226f" target="_blank" rel="noopener">Psicometria de redes e análise exploratória de grafos<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Itens como uma rede: centralidade, comunidades e uma alternativa à análise fatorial.</p>
+<label class="feito"><input type="checkbox" data-app="psi-14"><span>Concluído</span></label>
+</li>
+<li class="app" id="psi-15" data-busca="TRI multidimensional e TRI de misturas | Quando há mais de um traço, ou mais de uma população, respondendo ao mesmo teste. | MIRT mixture Rasch classes latentes">
+<span class="tick" aria-hidden="true">15</span>
+<h3><a href="https://claude.ai/public/artifacts/3842ceac-fccb-4ba0-8894-a871bf5e7e31" target="_blank" rel="noopener">TRI multidimensional e TRI de misturas<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Quando há mais de um traço, ou mais de uma população, respondendo ao mesmo teste.</p>
+<label class="feito"><input type="checkbox" data-app="psi-15"><span>Concluído</span></label>
+</li>
+<li class="app" id="psi-16" data-busca="TRI não-paramétrica (escala de Mokken) | Verificar se os itens formam uma escala ordenada sem impor uma curva paramétrica. | Mokken coeficiente H monotonicidade AISP">
+<span class="tick" aria-hidden="true">16</span>
+<h3><a href="https://claude.ai/public/artifacts/da4c7b9a-6ca7-4efa-961f-97f5cbbf919c" target="_blank" rel="noopener">TRI não-paramétrica (escala de Mokken)<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Verificar se os itens formam uma escala ordenada sem impor uma curva paramétrica.</p>
+<label class="feito"><input type="checkbox" data-app="psi-16"><span>Concluído</span></label>
+</li>
+<li class="app" id="psi-17" data-busca="Invariância de mensuração (DIF, alinhamento, MIMIC, MGCFA) | O instrumento funciona igual para grupos diferentes? Verifique antes de comparar médias. | funcionamento diferencial do item invariância configural métrica escalar">
+<span class="tick" aria-hidden="true">17</span>
+<h3><a href="https://claude.ai/public/artifacts/7b141a07-8b79-4ad5-b828-89bc1f3c7125" target="_blank" rel="noopener">Invariância de mensuração (DIF, alinhamento, MIMIC, MGCFA)<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>O instrumento funciona igual para grupos diferentes? Verifique antes de comparar médias.</p>
+<label class="feito"><input type="checkbox" data-app="psi-17"><span>Concluído</span></label>
+</li>
+<li class="app" id="psi-18" data-busca="Modelos de segunda ordem, modelos bifatoriais, modelagem de equações estruturais exploratória e tipos de coeficiente ômega | Estruturas hierárquicas e o que cada coeficiente ômega diz sobre o escore total e as subescalas. | bifactor ESEM ômega hierárquico segunda ordem">
+<span class="tick" aria-hidden="true">18</span>
+<h3><a href="https://claude.ai/public/artifacts/f8c0d504-4978-46e8-ab7c-691ffe942d5f" target="_blank" rel="noopener">Modelos de segunda ordem, modelos bifatoriais, modelagem de equações estruturais exploratória e tipos de coeficiente ômega<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Estruturas hierárquicas e o que cada coeficiente ômega diz sobre o escore total e as subescalas.</p>
+<label class="feito"><input type="checkbox" data-app="psi-18"><span>Concluído</span></label>
+</li>
+<li class="app" id="psi-19" data-busca="Modelos de escolha forçada (itens ipsativos) | Itens em que a pessoa ordena ou escolhe entre opções: como pontuar sem distorcer. | ipsativo Thurstoniano escolha forçada">
+<span class="tick" aria-hidden="true">19</span>
+<h3><a href="https://claude.ai/public/artifacts/397ca2a5-1e5b-4fb8-b304-f17fcfa722ab" target="_blank" rel="noopener">Modelos de escolha forçada (itens ipsativos)<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Itens em que a pessoa ordena ou escolhe entre opções: como pontuar sem distorcer.</p>
+<label class="feito"><input type="checkbox" data-app="psi-19"><span>Concluído</span></label>
+</li>
+<li class="app" id="psi-20" data-busca="Controle de viés de aquiescência, estilos extremos e desejabilidade social | Detectar e corrigir estilos de resposta que contaminam o escore. | aquiescência estilo de resposta extremo desejabilidade social itens reversos">
+<span class="tick" aria-hidden="true">20</span>
+<h3><a href="https://claude.ai/public/artifacts/fb515d29-96f8-4a88-81c3-1c401ad9b54e" target="_blank" rel="noopener">Controle de viés de aquiescência, estilos extremos e desejabilidade social<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Detectar e corrigir estilos de resposta que contaminam o escore.</p>
+<label class="feito"><input type="checkbox" data-app="psi-20"><span>Concluído</span></label>
+</li>
+<li class="app" id="psi-21" data-busca="Curvas de crescimento latente e painéis cruzados | Mudança ao longo do tempo e quem influencia quem entre duas variáveis. | LGM cross-lagged longitudinal painel RI-CLPM">
+<span class="tick" aria-hidden="true">21</span>
+<h3><a href="https://claude.ai/public/artifacts/08e105ef-e8f5-44ac-ad20-25fe38054e99" target="_blank" rel="noopener">Curvas de crescimento latente e painéis cruzados<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Mudança ao longo do tempo e quem influencia quem entre duas variáveis.</p>
+<label class="feito"><input type="checkbox" data-app="psi-21"><span>Concluído</span></label>
+</li>
+<li class="app" id="psi-22" data-busca="Equalização e linking | Colocar versões diferentes de um teste na mesma escala para comparar resultados. | equating equalização itens âncora">
+<span class="tick" aria-hidden="true">22</span>
+<h3><a href="https://claude.ai/public/artifacts/1c3ae1d4-55ea-428d-b432-946d1fa62783" target="_blank" rel="noopener">Equalização e linking<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Colocar versões diferentes de um teste na mesma escala para comparar resultados.</p>
+<label class="feito"><input type="checkbox" data-app="psi-22"><span>Concluído</span></label>
+</li>
+<li class="app" id="psi-23" data-busca="Análises psicométricas multinível | Quando estudantes estão em turmas e turmas em escolas: fidedignidade e estrutura em cada nível. | multinível ICC hierárquico aninhado">
+<span class="tick" aria-hidden="true">23</span>
+<h3><a href="https://claude.ai/public/artifacts/a0381773-9075-4dd1-bc09-f1ff4bf505d9" target="_blank" rel="noopener">Análises psicométricas multinível<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Quando estudantes estão em turmas e turmas em escolas: fidedignidade e estrutura em cada nível.</p>
+<label class="feito"><input type="checkbox" data-app="psi-23"><span>Concluído</span></label>
+</li>
+<li class="app" id="psi-24" data-busca="Planejamento amostral em Psicometria | Quantos respondentes para análise fatorial, TRI ou equações estruturais? Regras, simulações e justificativas. | tamanho da amostra Monte Carlo poder simulação">
+<span class="tick" aria-hidden="true">24</span>
+<h3><a href="https://claude.ai/public/artifacts/cf7f2a7b-2fca-4992-a15d-b1b0850ef79d" target="_blank" rel="noopener">Planejamento amostral em Psicometria<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Quantos respondentes para análise fatorial, TRI ou equações estruturais? Regras, simulações e justificativas.</p>
+<label class="feito"><input type="checkbox" data-app="psi-24"><span>Concluído</span></label>
+</li>
+</ol></details>
+<details class="serie" id="topicos" style="--c:var(--amber)">
+<summary>
+<span class="serie-num" aria-hidden="true">3</span>
+<span class="serie-titulo">Tópicos especiais <small>4 apps</small></span>
+<span class="serie-abrir"><span class="ab">Ver os 4 apps</span><span class="fe">Recolher</span></span>
+<span class="serie-fim">Ao final, você consegue ler um estudo com olhar crítico, sintetizar evidências e analisar o tempo até um evento.</span>
+<span class="serie-prog" data-serie="top" data-n="4" hidden></span>
+</summary>
+<ol class="apps">
+<li class="app" id="top-01" data-busca="Epidemiologia | Medidas de frequência e associação, desenhos de estudo e vieses: a base para ler e planejar estudos. | incidência prevalência risco relativo razão de chances coorte caso-controle viés confundimento">
+<span class="tick" aria-hidden="true">01</span>
+<h3><a href="https://claude.ai/public/artifacts/b74b8632-1186-494d-a5fa-178fdfac6655" target="_blank" rel="noopener">Epidemiologia<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Medidas de frequência e associação, desenhos de estudo e vieses: a base para ler e planejar estudos.</p>
+<label class="feito"><input type="checkbox" data-app="top-01"><span>Concluído</span></label>
+</li>
+<li class="app" id="top-02" data-busca="Medicina Baseada em Evidências | Formular a pergunta, avaliar criticamente a evidência e aplicá-la à decisão. | MBE PICO níveis de evidência avaliação crítica NNT">
+<span class="tick" aria-hidden="true">02</span>
+<h3><a href="https://claude.ai/public/artifacts/ca8d360d-4b8a-44f5-9931-577500d89b10" target="_blank" rel="noopener">Medicina Baseada em Evidências<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Formular a pergunta, avaliar criticamente a evidência e aplicá-la à decisão.</p>
+<label class="feito"><input type="checkbox" data-app="top-02"><span>Concluído</span></label>
+</li>
+<li class="app" id="top-03" data-busca="Meta-análises | Combinar resultados de vários estudos: heterogeneidade, modelos de efeito e gráfico de floresta. | revisão sistemática forest plot I² efeitos aleatórios viés de publicação">
+<span class="tick" aria-hidden="true">03</span>
+<h3><a href="https://claude.ai/public/artifacts/d9d61096-cd86-4516-bea7-bdb7e022a0e6" target="_blank" rel="noopener">Meta-análises<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Combinar resultados de vários estudos: heterogeneidade, modelos de efeito e gráfico de floresta.</p>
+<label class="feito"><input type="checkbox" data-app="top-03"><span>Concluído</span></label>
+</li>
+<li class="app" id="top-04" data-busca="Análise de sobrevivência | Tempo até o evento: Kaplan-Meier, teste de log-rank e regressão de Cox. | sobrevida censura hazard ratio">
+<span class="tick" aria-hidden="true">04</span>
+<h3><a href="https://claude.ai/public/artifacts/1a8fd39d-fd3a-4fbd-b41b-ce4598dce45c" target="_blank" rel="noopener">Análise de sobrevivência<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Tempo até o evento: Kaplan-Meier, teste de log-rank e regressão de Cox.</p>
+<label class="feito"><input type="checkbox" data-app="top-04"><span>Concluído</span></label>
+</li>
+</ol></details>
+<details class="serie" id="learning-analytics" style="--c:var(--ok)">
+<summary>
+<span class="serie-num" aria-hidden="true">4</span>
+<span class="serie-titulo">Learning analytics <small>20 apps</small></span>
+<span class="serie-abrir"><span class="ab">Ver os 20 apps</span><span class="fe">Recolher</span></span>
+<span class="serie-fim">Ao final, você consegue transformar os registros de uma plataforma de ensino em perguntas, análises e decisões responsáveis.</span>
+<span class="serie-prog" data-serie="la" data-n="20" hidden></span>
+</summary>
+<ol class="apps">
+<li class="app" id="la-01" data-busca="Mapa de decisão para learning analytics na prática | Qual método responde à sua pergunta? Comece por aqui. | mapa decisão escolha do método analítica de aprendizagem">
+<span class="tick" aria-hidden="true">01</span>
+<h3><a href="https://claude.ai/public/artifacts/5473230c-4620-4975-8be1-05a4329473f7" target="_blank" rel="noopener">Mapa de decisão para learning analytics na prática<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Qual método responde à sua pergunta? Comece por aqui.</p>
+<label class="feito"><input type="checkbox" data-app="la-01"><span>Concluído</span></label>
+</li>
+<li class="app" id="la-02" data-busca="Dos logs às variáveis | Transformar registros brutos da plataforma em variáveis que se pode analisar. | logs engenharia de atributos pré-processamento AVA Moodle">
+<span class="tick" aria-hidden="true">02</span>
+<h3><a href="https://claude.ai/public/artifacts/f8a72eec-1c8e-4808-b584-ccb31d26edb7" target="_blank" rel="noopener">Dos logs às variáveis<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Transformar registros brutos da plataforma em variáveis que se pode analisar.</p>
+<label class="feito"><input type="checkbox" data-app="la-02"><span>Concluído</span></label>
+</li>
+<li class="app" id="la-03" data-busca="Modelagem preditiva com aprendizagem de máquina | Prever risco e desempenho com validação honesta, sem superajuste. | machine learning validação cruzada floresta aleatória AUC overfitting">
+<span class="tick" aria-hidden="true">03</span>
+<h3><a href="https://claude.ai/public/artifacts/3554c015-db01-4a4e-9a16-68586f4b7693" target="_blank" rel="noopener">Modelagem preditiva com aprendizagem de máquina<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Prever risco e desempenho com validação honesta, sem superajuste.</p>
+<label class="feito"><input type="checkbox" data-app="la-03"><span>Concluído</span></label>
+</li>
+<li class="app" id="la-04" data-busca="Análise de clusters | Agrupar estudantes por padrões de engajamento e interpretar os perfis. | k-means hierárquico silhueta perfis agrupamento">
+<span class="tick" aria-hidden="true">04</span>
+<h3><a href="https://claude.ai/public/artifacts/7cb39543-45ae-4252-ae22-9527ee23bf15" target="_blank" rel="noopener">Análise de clusters<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Agrupar estudantes por padrões de engajamento e interpretar os perfis.</p>
+<label class="feito"><input type="checkbox" data-app="la-04"><span>Concluído</span></label>
+</li>
+<li class="app" id="la-05" data-busca="Redes epistêmicas e ordenadas | Como os conceitos se conectam no discurso dos estudantes: análise de redes epistêmicas e ordenadas. | ENA ONA coocorrência discurso">
+<span class="tick" aria-hidden="true">05</span>
+<h3><a href="https://claude.ai/public/artifacts/1ec72055-84c8-4fff-9c34-e9de41d31598" target="_blank" rel="noopener">Redes epistêmicas e ordenadas<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Como os conceitos se conectam no discurso dos estudantes: análise de redes epistêmicas e ordenadas.</p>
+<label class="feito"><input type="checkbox" data-app="la-05"><span>Concluído</span></label>
+</li>
+<li class="app" id="la-06" data-busca="Redes temporais | Interações que mudam com o tempo: quem fala com quem, e quando. | rede temporal dinâmica janelas">
+<span class="tick" aria-hidden="true">06</span>
+<h3><a href="https://claude.ai/public/artifacts/8f67ccb1-b23d-489d-94db-3637f6126ead" target="_blank" rel="noopener">Redes temporais<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Interações que mudam com o tempo: quem fala com quem, e quando.</p>
+<label class="feito"><input type="checkbox" data-app="la-06"><span>Concluído</span></label>
+</li>
+<li class="app" id="la-07" data-busca="Análise de sequências | Ordem e duração de estados ao longo do curso: mineração e comparação de sequências. | TraMineR sequência estados distância dissimilaridade">
+<span class="tick" aria-hidden="true">07</span>
+<h3><a href="https://claude.ai/public/artifacts/035324e3-5474-4a1a-a954-1c9e8a27a1e1" target="_blank" rel="noopener">Análise de sequências<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Ordem e duração de estados ao longo do curso: mineração e comparação de sequências.</p>
+<label class="feito"><input type="checkbox" data-app="la-07"><span>Concluído</span></label>
+</li>
+<li class="app" id="la-08" data-busca="Modelo VaSSTra (variáveis → estados → sequências → trajetórias) | Um roteiro para dados longitudinais: das variáveis aos estados, às sequências e às trajetórias. | VaSSTra trajetórias estados longitudinal">
+<span class="tick" aria-hidden="true">08</span>
+<h3><a href="https://claude.ai/public/artifacts/fe3c0643-8475-4212-b876-c38c55b5f5d9" target="_blank" rel="noopener">Modelo VaSSTra (variáveis → estados → sequências → trajetórias)<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Um roteiro para dados longitudinais: das variáveis aos estados, às sequências e às trajetórias.</p>
+<label class="feito"><input type="checkbox" data-app="la-08"><span>Concluído</span></label>
+</li>
+<li class="app" id="la-09" data-busca="Análise de redes de transição (TNA) | Probabilidades de passar de um estado a outro, vistas como uma rede. | TNA transição Markov">
+<span class="tick" aria-hidden="true">09</span>
+<h3><a href="https://claude.ai/public/artifacts/9b4074e0-2e48-45eb-98a0-26a40cbfd96a" target="_blank" rel="noopener">Análise de redes de transição (TNA)<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Probabilidades de passar de um estado a outro, vistas como uma rede.</p>
+<label class="feito"><input type="checkbox" data-app="la-09"><span>Concluído</span></label>
+</li>
+<li class="app" id="la-10" data-busca="Análise de redes sociais | A estrutura das interações em fóruns e grupos: centralidade, coesão e papéis. | SNA fórum centralidade grau intermediação">
+<span class="tick" aria-hidden="true">10</span>
+<h3><a href="https://claude.ai/public/artifacts/522264ad-5fce-4d52-894b-93b3b87864b8" target="_blank" rel="noopener">Análise de redes sociais<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>A estrutura das interações em fóruns e grupos: centralidade, coesão e papéis.</p>
+<label class="feito"><input type="checkbox" data-app="la-10"><span>Concluído</span></label>
+</li>
+<li class="app" id="la-11" data-busca="Mineração de processos (process mining) | Descobrir o fluxo real de atividades a partir de logs de eventos. | process mining log de eventos modelo de processo">
+<span class="tick" aria-hidden="true">11</span>
+<h3><a href="https://claude.ai/public/artifacts/b2cce37d-4c72-4470-8881-1ad11a1b7b32" target="_blank" rel="noopener">Mineração de processos (process mining)<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Descobrir o fluxo real de atividades a partir de logs de eventos.</p>
+<label class="feito"><input type="checkbox" data-app="la-11"><span>Concluído</span></label>
+</li>
+<li class="app" id="la-12" data-busca="Análise multicanal e estados ocultos | Combinar várias fontes de dados e inferir estados latentes ao longo do tempo com modelos ocultos de Markov. | HMM multicanal seqHMM estados ocultos">
+<span class="tick" aria-hidden="true">12</span>
+<h3><a href="https://claude.ai/public/artifacts/611d62f9-c4bd-433b-bb11-a6b84ce48071" target="_blank" rel="noopener">Análise multicanal e estados ocultos<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Combinar várias fontes de dados e inferir estados latentes ao longo do tempo com modelos ocultos de Markov.</p>
+<label class="feito"><input type="checkbox" data-app="la-12"><span>Concluído</span></label>
+</li>
+<li class="app" id="la-13" data-busca="Processamento de linguagem, incluindo alocação latente de Dirichlet (LDA) e modelagem estrutural de tópicos (STM) | Descobrir temas em textos de estudantes e relacioná-los a covariáveis. | NLP tópicos texto mineração de texto LDA STM">
+<span class="tick" aria-hidden="true">13</span>
+<h3><a href="https://claude.ai/public/artifacts/b9339e4c-3110-4497-b937-502b61f73df8" target="_blank" rel="noopener">Processamento de linguagem, incluindo alocação latente de Dirichlet (LDA) e modelagem estrutural de tópicos (STM)<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Descobrir temas em textos de estudantes e relacioná-los a covariáveis.</p>
+<label class="feito"><input type="checkbox" data-app="la-13"><span>Concluído</span></label>
+</li>
+<li class="app" id="la-14" data-busca="Modelos de linguagem como codificadores | Usar grandes modelos de linguagem para codificar textos qualitativos, com verificação de confiabilidade. | LLM codificação qualitativa kappa concordância">
+<span class="tick" aria-hidden="true">14</span>
+<h3><a href="https://claude.ai/public/artifacts/30b2d0b3-a93f-46f9-b1a4-27c600d871ed" target="_blank" rel="noopener">Modelos de linguagem como codificadores<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Usar grandes modelos de linguagem para codificar textos qualitativos, com verificação de confiabilidade.</p>
+<label class="feito"><input type="checkbox" data-app="la-14"><span>Concluído</span></label>
+</li>
+<li class="app" id="la-15" data-busca="Rastreamento de conhecimento (knowledge tracing) | Estimar o domínio de cada habilidade ao longo das tentativas. | BKT DKT knowledge tracing domínio tentativas">
+<span class="tick" aria-hidden="true">15</span>
+<h3><a href="https://claude.ai/public/artifacts/287fe0cc-8fbc-4fb6-a50e-b8d4b76a0891" target="_blank" rel="noopener">Rastreamento de conhecimento (knowledge tracing)<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Estimar o domínio de cada habilidade ao longo das tentativas.</p>
+<label class="feito"><input type="checkbox" data-app="la-15"><span>Concluído</span></label>
+</li>
+<li class="app" id="la-16" data-busca="Modelagem cognitiva diagnóstica com redes neurais | Diagnóstico de habilidades com modelos neurais, comparado aos modelos clássicos. | Deep-CDM redes neurais diagnóstico cognitivo NeuralCDM">
+<span class="tick" aria-hidden="true">16</span>
+<h3><a href="https://claude.ai/public/artifacts/eb459a82-c0d6-4932-942b-a4411f6d40d4" target="_blank" rel="noopener">Modelagem cognitiva diagnóstica com redes neurais<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Diagnóstico de habilidades com modelos neurais, comparado aos modelos clássicos.</p>
+<label class="feito"><input type="checkbox" data-app="la-16"><span>Concluído</span></label>
+</li>
+<li class="app" id="la-17" data-busca="IA explicável | Abrir a caixa-preta: por que o modelo previu isso para este estudante? | XAI SHAP LIME explicabilidade inteligência artificial">
+<span class="tick" aria-hidden="true">17</span>
+<h3><a href="https://claude.ai/public/artifacts/3a309b8a-612c-4a6c-9f5b-e0095c53a258" target="_blank" rel="noopener">IA explicável<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Abrir a caixa-preta: por que o modelo previu isso para este estudante?</p>
+<label class="feito"><input type="checkbox" data-app="la-17"><span>Concluído</span></label>
+</li>
+<li class="app" id="la-18" data-busca="Painéis (Dashboards) e Feedback | Projetar painéis que informam sem induzir a erro e feedback que gera ação. | dashboard visualização feedback">
+<span class="tick" aria-hidden="true">18</span>
+<h3><a href="https://claude.ai/public/artifacts/e35e3598-34e1-4996-aa3b-2cff1f4e071a" target="_blank" rel="noopener">Painéis (Dashboards) e Feedback<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Projetar painéis que informam sem induzir a erro e feedback que gera ação.</p>
+<label class="feito"><input type="checkbox" data-app="la-18"><span>Concluído</span></label>
+</li>
+<li class="app" id="la-19" data-busca="Avaliação de impacto | A intervenção funcionou? Desenhos quase-experimentais e inferência causal. | causal diferenças em diferenças escore de propensão quase-experimento">
+<span class="tick" aria-hidden="true">19</span>
+<h3><a href="https://claude.ai/public/artifacts/0f14b7eb-5d63-47eb-963f-fc37c8046355" target="_blank" rel="noopener">Avaliação de impacto<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>A intervenção funcionou? Desenhos quase-experimentais e inferência causal.</p>
+<label class="feito"><input type="checkbox" data-app="la-19"><span>Concluído</span></label>
+</li>
+<li class="app" id="la-20" data-busca="Ética, privacidade, fairness e governança | Os limites: consentimento, viés algorítmico e responsabilidade no uso de dados. | LGPD ética privacidade justiça algorítmica governança">
+<span class="tick" aria-hidden="true">20</span>
+<h3><a href="https://claude.ai/public/artifacts/78b7ae92-92b9-40bf-af0a-70a5fbf33231" target="_blank" rel="noopener">Ética, privacidade, fairness e governança<span class="sr"> (abre em nova aba)</span></a></h3>
+<p>Os limites: consentimento, viés algorítmico e responsabilidade no uso de dados.</p>
+<label class="feito"><input type="checkbox" data-app="la-20"><span>Concluído</span></label>
+</li>
+</ol></details>
+</section>
+
+<section id="sobre" class="sec">
+<h2>Sobre a Régua</h2>
+<p>Aprender é como respirar. Ninguém aprende estatística lendo doze páginas de teoria de uma vez, assim como ninguém respira uma vez por dia. Por isso cada app alterna, em ciclos curtos, uma dose de teoria, uma demonstração para manipular e um autoteste sem nota, o <em>Respire</em>. Os ciclos se apoiam em três achados sólidos da ciência da aprendizagem:</p>
+<ul class="pilares">
+<li><strong>Recuperar da memória fixa mais do que reler.</strong> Os autotestes existem para isso, não para avaliar (Roediger e Karpicke, 2006; Dunlosky et al., 2013).</li>
+<li><strong>A memória de trabalho é pequena.</strong> A teoria vem em pedaços curtos, as fórmulas ficam atrás de um botão e nada aparece antes de ser explicado (Sweller, van Merriënboer e Paas, 2019).</li>
+<li><strong>Adultos aprendem melhor quando o propósito vem antes do conteúdo.</strong> Cada app tem pontes explícitas com a sua tese, e esta página começa pela sua pergunta, não pelo índice (Knowles, Holton e Swanson, 2015).</li>
+</ul>
+<p>Alguns conceitos reaparecem em vários apps de propósito: reencontrar uma ideia em contexto novo, semanas depois, é prática espaçada e intercalada. Os itens dos autotestes seguem diretrizes consolidadas de redação de itens (Haladyna, Downing e Rodriguez, 2002): alternativas com comprimento e forma parecidos, para que a resposta certa não se entregue pelo formato. Os motores estatísticos foram conferidos contra implementações de referência em R ou Python, e cada app declara as próprias simplificações.</p>
+<h3>Referências</h3>
+<ol class="refs">
+<li>Roediger HL, Karpicke JD. Test-enhanced learning: taking memory tests improves long-term retention. Psychological Science. 2006;17(3):249-55. <a href="https://doi.org/10.1111/j.1467-9280.2006.01693.x" target="_blank" rel="noopener">https://doi.org/10.1111/j.1467-9280.2006.01693.x</a></li>
+<li>Dunlosky J, Rawson KA, Marsh EJ, Nathan MJ, Willingham DT. Improving students&#x27; learning with effective learning techniques: promising directions from cognitive and educational psychology. Psychological Science in the Public Interest. 2013;14(1):4-58. <a href="https://doi.org/10.1177/1529100612453266" target="_blank" rel="noopener">https://doi.org/10.1177/1529100612453266</a></li>
+<li>Sweller J, van Merriënboer JJG, Paas F. Cognitive architecture and instructional design: 20 years later. Educational Psychology Review. 2019;31(2):261-92. <a href="https://doi.org/10.1007/s10648-019-09465-5" target="_blank" rel="noopener">https://doi.org/10.1007/s10648-019-09465-5</a></li>
+<li>Knowles MS, Holton EF, Swanson RA. Andragogy: a theory of adult learning. In: The adult learner: the definitive classic in adult education and human resource development. 8. ed. Abingdon: Routledge; 2015. <a href="https://doi.org/10.4324/9781315816951-11" target="_blank" rel="noopener">https://doi.org/10.4324/9781315816951-11</a></li>
+<li>Haladyna TM, Downing SM, Rodriguez MC. A review of multiple-choice item-writing guidelines for classroom assessment. Applied Measurement in Education. 2002;15(3):309-34. <a href="https://doi.org/10.1207/S15324818AME1503_5" target="_blank" rel="noopener">https://doi.org/10.1207/S15324818AME1503_5</a></li>
+</ol>
+<h3>Créditos</h3>
+<p class="credito">Concepção pedagógica e curadoria científica: Professor Carlos Fernando Collares, MD, MSc, PhD. Criado a partir de uma ideia da Professora Ana Tereza Bittencourt Guimarães. Ambiente desenvolvido com apoio do Claude Fable 5.1 (Anthropic). Como todo material produzido com auxílio de inteligência artificial, pode conter incorreções involuntárias; em caso de dúvida, consulte as referências indicadas em cada app e o docente responsável.</p>
+<p class="passaporte js-only">As marcações de "Concluído" ficam salvas só neste navegador, sem cadastro e sem nota.<br><br><button type="button" id="zerar">Apagar todas as marcações</button></p>
+</section>
+
+<footer class="rodape"><span>© Régua, 2026.</span><a href="#top" onclick="window.scrollTo(0,0);return false;">Voltar ao início</a></footer>
+</div>
+<script>
+(function () {
+  document.body.classList.add('js');
+  var KEY = 'regua-passaporte-v1';
+  var mem = {};
+  function load() { try { var s = localStorage.getItem(KEY); mem = s ? (JSON.parse(s) || {}) : {}; } catch (e) { mem = {}; } }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(mem)); } catch (e) {} }
+  function norm(s) { return (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
+
+  /* ---- passaporte */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('.feito input[data-app]'));
+  var ticks = {}; Array.prototype.forEach.call(document.querySelectorAll('.ruler .tk[data-app]'), function (t) { ticks[t.getAttribute('data-app')] = t; });
+  function pintar() {
+    var porSerie = {};
+    boxes.forEach(function (b) {
+      var id = b.getAttribute('data-app'), on = !!mem[id];
+      b.checked = on;
+      var li = document.getElementById(id); if (li) li.classList.toggle('feito-sim', on);
+      if (ticks[id]) ticks[id].classList.toggle('feito', on);
+      var serie = id.split('-')[0]; porSerie[serie] = (porSerie[serie] || 0) + (on ? 1 : 0);
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.trilha li[data-app]'), function (li) {
+      li.classList.toggle('feito-sim', !!mem[li.getAttribute('data-app')]);
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.serie-prog'), function (p) {
+      var k = p.getAttribute('data-serie'), n = +p.getAttribute('data-n'), c = porSerie[k] || 0;
+      p.hidden = c === 0; p.textContent = c === n ? 'Série concluída: ' + n + ' de ' + n : c + ' de ' + n + ' concluídos';
+    });
+  }
+  boxes.forEach(function (b) {
+    b.addEventListener('change', function () {
+      var id = b.getAttribute('data-app');
+      if (b.checked) mem[id] = 1; else delete mem[id];
+      save(); pintar();
+    });
+  });
+  var zerar = document.getElementById('zerar');
+  if (zerar) zerar.addEventListener('click', function () {
+    if (window.confirm('Apagar todas as marcações de "Concluído" deste navegador?')) { mem = {}; save(); pintar(); }
+  });
+  load(); pintar();
+
+  /* ---- abrir a série ao navegar por âncora */
+  function abrirAlvo(hash) {
+    if (!hash || hash.length < 2) return;
+    var el = document.getElementById(decodeURIComponent(hash.slice(1)));
+    if (!el) return;
+    var det = el.tagName === 'DETAILS' ? el : el.closest && el.closest('details');
+    if (det && !det.open) det.open = true;
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('a[href^="#"]'), function (a) {
+    a.addEventListener('click', function () { abrirAlvo(a.getAttribute('href')); });
+  });
+  window.addEventListener('hashchange', function () { abrirAlvo(location.hash); });
+  abrirAlvo(location.hash);
+
+  /* ---- busca */
+  var input = document.getElementById('busca'), status = document.getElementById('busca-status');
+  var itens = Array.prototype.slice.call(document.querySelectorAll('.app'));
+  var series = Array.prototype.slice.call(document.querySelectorAll('.serie'));
+  var timer = null, abertasAntes = null;
+  function limpar() {
+    document.body.classList.remove('buscando');
+    itens.forEach(function (li) { li.classList.remove('oculto'); });
+    series.forEach(function (d, i) { d.hidden = false; if (abertasAntes) d.open = abertasAntes[i]; });
+    abertasAntes = null; status.hidden = true; status.textContent = '';
+  }
+  function buscar() {
+    var q = norm(input.value.trim());
+    if (q.length < 2) { limpar(); return; }
+    if (!abertasAntes) abertasAntes = series.map(function (d) { return d.open; });
+    document.body.classList.add('buscando');
+    var total = 0;
+    series.forEach(function (d) {
+      var achou = 0;
+      Array.prototype.forEach.call(d.querySelectorAll('.app'), function (li) {
+        var ok = norm(li.getAttribute('data-busca')).indexOf(q) !== -1;
+        li.classList.toggle('oculto', !ok); if (ok) achou++;
+      });
+      d.hidden = achou === 0; if (achou) d.open = true; total += achou;
+    });
+    status.hidden = false;
+    status.textContent = total === 0 ? 'Nenhum app encontrado para "' + input.value.trim() + '". Tente outra palavra, como "regressão" ou "validade". '
+      : (total === 1 ? '1 app encontrado. ' : total + ' apps encontrados. ');
+    var b = document.createElement('button'); b.type = 'button'; b.textContent = 'Limpar busca';
+    b.addEventListener('click', function () { input.value = ''; limpar(); input.focus(); });
+    status.appendChild(b);
+  }
+  if (input) {
+    input.addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(buscar, 120); });
+    input.addEventListener('keydown', function (e) { if (e.key === 'Escape') { input.value = ''; limpar(); } });
+  }
+
+  /* ---- impressão: abrir tudo */
+  var estadoImpressao = null;
+  window.addEventListener('beforeprint', function () {
+    var all = Array.prototype.slice.call(document.querySelectorAll('details'));
+    estadoImpressao = all.map(function (d) { return d.open; }); all.forEach(function (d) { d.open = true; });
+  });
+  window.addEventListener('afterprint', function () {
+    if (!estadoImpressao) return;
+    Array.prototype.forEach.call(document.querySelectorAll('details'), function (d, i) { d.open = estadoImpressao[i]; });
+    estadoImpressao = null;
+  });
+})();
+</script>
+</body>
+</html>
